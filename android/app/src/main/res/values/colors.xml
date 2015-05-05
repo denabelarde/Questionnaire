@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="air21_theme">#441a66</color>
+    <color name="air21_theme_overlay">#310f4d</color>
+    <color name="air21_text">#491f6b</color>
+    <color name="White">#ffffff</color>
+    <color name="login_button_color">#91b1ba</color>
+    <color name="login_button_overlay">#CC91b1ba</color>
+    <color name="login_button_text">#1f0e2e</color>
+    <color name="login_button_text_overlay">#CC1f0e2e</color>
+    <color name="welcome_text_color">#c08deb</color>
+    <color name="text_hint">#808080</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="black">#000000</color>
+    <color name="logout">#ae000000</color>
+    <color name="pod_color">#567d8c</color>
+    <color name="pod_color_overlay">#466d7a</color>
+    <color name="dex_color">#9678ab</color>
+    <color name="dex_color_overlay">#866a9c</color>
+    <color name="prud_color">#683685</color>
+    <color name="prud_color_overlay">#582875</color>
+    <color name="rud_color">#802f4f</color>
+    <color name="rud_color_overlay">#70213f</color>
+    <color name="submit_button">#782b4a</color>
+    <color name="submit_button_overlay">#CC782b4a</color>
+    <color name="cancel_button">#9c325c</color>
+    <color name="cancel_button_overlay">#CC9c325c</color>
+    <color name="air21_red">#ffdc000e</color>
+    <color name="signature_button">#4c727d</color>
+    <color name="signature_button_overlay">#CC4c727d</color>
+    <color name="dark_gray">#ff6f6f6f</color>
+    <color name="blue_link">#ff1865da</color>
+    <color name="sky_blue">#73f5df</color>
+    <color name="activities_list_bg">#b6b8d4</color>
+    <color name="activities_list_bg_overlay">#c5c7e3</color>
+    <color name="blue_onpress">#99d9f0</color>
+    <color name="ack_code_color">#97c706</color>
+    <color name="rate_cal_color">#5D5D7F</color>
+    <color name="inquire_ship_color">#7D5999</color>
+    <color name="drop_off_color">#6F6FAD</color>
+    <color name="service_ref_color">#803053</color>
+    <color name="MRCHNDSR_ORANGE">#FFFF9500</color>
+    <color name="signature_bg">#6f7196</color>
+</resources>
