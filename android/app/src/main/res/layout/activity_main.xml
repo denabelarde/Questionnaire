@@ -1,22 +1,24 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.denabelarde.questionnaire.MainActivity">
+    tools:context="com.denabelarde.questionnaire.activities.MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@color/black_overlay"
+        android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:text="@string/ask_question"
-        android:textSize="20sp"/>
+        android:textColor="@color/White"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/questions_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-</LinearLayout>
+</RelativeLayout>

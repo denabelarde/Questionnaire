@@ -5,4 +5,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+
+    <style name="SplashScreenTheme" parent="@android:style/Theme.Holo">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/air21_theme</item>
+        <!-- other activity and action bar styles here -->
+    </style>
+
 </resources>
