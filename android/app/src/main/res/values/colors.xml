@@ -42,4 +42,9 @@
     <color name="service_ref_color">#803053</color>
     <color name="MRCHNDSR_ORANGE">#FFFF9500</color>
     <color name="signature_bg">#6f7196</color>
+    <color name="Silver">#C0C0C0</color>
+    <color name="PinkishBlue">#5e6d81</color>
+    <color name="lightBlue">#bed6e6</color>
+    <color name="darkBlue">#1b62a9</color>
+    <color name="DarkishWhiteBG">#e4e4e4</color>
 </resources>
