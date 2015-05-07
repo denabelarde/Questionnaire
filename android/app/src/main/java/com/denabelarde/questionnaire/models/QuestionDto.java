@@ -13,8 +13,21 @@ public class QuestionDto {
     private String description;
     private String createdAt;
     private String updatedAt;
-    private String answersCount;
+    private int answersCount;
 
+    public QuestionDto() {
+    }
+
+    public QuestionDto(String objectId, String ownerId, String ownerUsername, String title, String description, String createdAt, String updatedAt, int answersCount) {
+        this.objectId = objectId;
+        this.ownerId = ownerId;
+        this.ownerUsername = ownerUsername;
+        this.title = title;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.answersCount = answersCount;
+    }
 
     public long get_id() {
         return _id;
@@ -80,11 +93,11 @@ public class QuestionDto {
         this.updatedAt = updatedAt;
     }
 
-    public String getAnswersCount() {
+    public int getAnswersCount() {
         return answersCount;
     }
 
-    public void setAnswersCount(String answersCount) {
+    public void setAnswersCount(int answersCount) {
         this.answersCount = answersCount;
     }
 }

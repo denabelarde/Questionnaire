@@ -1,6 +1,7 @@
 package com.denabelarde.questionnaire.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class LoginActivity extends Activity {
     EditText passwordField;
     @InjectView(R.id.login_button)
     Button loginButton;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +60,17 @@ public class LoginActivity extends Activity {
             public void onClick(View view) {
                 String username = userNameField.getText().toString();
                 String password = passwordField.getText().toString();
+                progressDialog = ProgressDialog.show(LoginActivity.this,
+                        "Notification",
+                        "Fetching questions, please wait ...");
+                progressDialog.setCancelable(true);
                 ParseUser.logInInBackground(username, password, new LogInCallback() {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             //start sinch service
                             //start next activity
+                            progressDialog.dismiss();
                             UserDbModel.insertUser(LoginActivity.this, new UserDto(user.getObjectId(), user.getUsername(), new Date().toString()));
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);

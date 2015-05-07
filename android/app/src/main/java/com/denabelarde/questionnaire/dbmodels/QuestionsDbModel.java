@@ -5,17 +5,23 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.denabelarde.questionnaire.helpers.DatabaseHelper;
-import com.denabelarde.questionnaire.models.UserDto;
+import com.denabelarde.questionnaire.models.QuestionDto;
+
+import java.util.ArrayList;
 
 
 public class QuestionsDbModel {
 
-    private static String TABLE_TAG = "users";
+    private static String TABLE_TAG = "questions";
     private static String _ID_TAG = "_id";
     private static String OBJECT_ID_TAG = "object_id";
-    private static String OWNER_ID_TAG = "username";
-    private static String OWNER_USERNAME_TAG = "datecreated";
-
+    private static String OWNER_ID_TAG = "owner_id";
+    private static String OWNER_USERNAME_TAG = "owner_username";
+    private static String TITLE_TAG = "title";
+    private static String DESCRIPTION_TAG = "description";
+    private static String CREATED_TAG = "created_at";
+    private static String UPDATED_TAG = "updated_at";
+    private static String ANSWERS_COUNT_TAG = "answers_count";
 
     public static int count(Context context) {
         DatabaseHelper dbhelper = new DatabaseHelper(context);
@@ -36,42 +42,66 @@ public class QuestionsDbModel {
     }
 
 
-    public static long insertUser(Context context, UserDto userDto) {
+    public static void batchInsertQuestions(Context context,
+                                            ArrayList<String[]> values) {
+        String sql = "INSERT INTO " + TABLE_TAG;
+        sql += "(" + OBJECT_ID_TAG + "," + OWNER_ID_TAG + "," + OWNER_USERNAME_TAG + "," + TITLE_TAG + "," + DESCRIPTION_TAG + "," + CREATED_TAG + "," + UPDATED_TAG + "," + ANSWERS_COUNT_TAG + ")";
+        sql += "VALUES (?,?,?,?,?,?,?,?)";
+
+
+        DatabaseHelper dbhelper = new DatabaseHelper(context);
+        dbhelper.batchInsert(sql, values);
+    }
+
+
+    public static long insertQuestion(Context context, QuestionDto questionDto) {
         DatabaseHelper dbhelper = new DatabaseHelper(context);
 
         ContentValues values = new ContentValues();
-//        values.put(USERNAME_TAG, userDto.getUserName());
-//        values.put(OBJECT_ID_TAG, userDto.getObjectID());
-//        values.put(DATECREATED_TAG, userDto.getDateCreated());
+        values.put(OBJECT_ID_TAG, questionDto.getObjectId());
+        values.put(OWNER_ID_TAG, questionDto.getOwnerId());
+        values.put(OWNER_USERNAME_TAG, questionDto.getOwnerUsername());
+        values.put(TITLE_TAG, questionDto.getTitle());
+        values.put(DESCRIPTION_TAG, questionDto.getDescription());
+        values.put(CREATED_TAG, questionDto.getCreatedAt());
+        values.put(UPDATED_TAG, questionDto.getUpdatedAt());
+        values.put(ANSWERS_COUNT_TAG, questionDto.getAnswersCount());
+
         return dbhelper.insert(TABLE_TAG, values);
 
     }
 
-    public static UserDto getCurrentUser(Context context) {
+    public static ArrayList<QuestionDto> getAllQuestions(Context context) {
         DatabaseHelper dbhelper = new DatabaseHelper(context);
-        int status = 1;
-        Cursor user = dbhelper.query(TABLE_TAG, null, null, new String[]{String.valueOf(status)}, null, null,
+        Cursor question = dbhelper.query(TABLE_TAG, null, null, null, null, null,
                 null);
 
-        UserDto userDto = null;
-        if (user.moveToFirst()) {
+        ArrayList<QuestionDto> questionsArray = new ArrayList<>();
+        if (question.moveToFirst()) {
             do {
-                userDto = new UserDto();
-                userDto.set_id(user.getLong(0));
-                userDto.setObjectID(user.getString(1));
-                userDto.setUserName(user.getString(2));
-                userDto.setDateCreated(user.getString(3));
-            } while (user.moveToNext());
+                QuestionDto questionDto = new QuestionDto();
+                questionDto.set_id(question.getLong(0));
+                questionDto.setObjectId(question.getString(1));
+                questionDto.setOwnerId(question.getString(2));
+                questionDto.setOwnerUsername(question.getString(3));
+                questionDto.setTitle(question.getString(4));
+                questionDto.setDescription(question.getString(5));
+                questionDto.setCreatedAt(question.getString(6));
+                questionDto.setUpdatedAt(question.getString(7));
+                questionDto.setAnswersCount(question.getInt(8));
+
+                questionsArray.add(questionDto);
+            } while (question.moveToNext());
 
         }
 
-        user.close();
+        question.close();
         dbhelper.close();
-        return userDto;
+        return questionsArray;
     }
 
 
-    public static void deleteAllUsers(Context context) {
+    public static void deleteAllQuestions(Context context) {
         DatabaseHelper dbhelper = new DatabaseHelper(context);
         System.out.println(dbhelper.delete(TABLE_TAG, null, null) + " <--- Users Deleted!");
 

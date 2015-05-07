@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS `questions` (
 	`owner_username` text NOT NULL,
 	`title` text NOT NULL,
 	`description` text NOT NULL,
-	`created_at` text NOT NULL,
-	`updated_at` text NOT NULL,
-	`answers_count` text NOT NULL
+	`created_at` text,
+	`updated_at` text,
+	`answers_count` INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS `answers` (

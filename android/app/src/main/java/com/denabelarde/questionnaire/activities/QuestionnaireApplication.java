@@ -14,5 +14,6 @@ public class QuestionnaireApplication extends Application {
     public void onCreate() {
         Parse.initialize(this, "YlA9W8KPP1ieJ7mzF4yAfeUpVcIHgHrCT92e9HJ8", "hT9SPJ0xiFhJjIjpjvx4R39MmDcsrPTFhkzdO5lw");
         ParseInstallation.getCurrentInstallation().saveInBackground();
+
     }
 }

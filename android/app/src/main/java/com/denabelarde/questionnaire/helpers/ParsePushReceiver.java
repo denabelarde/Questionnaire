@@ -14,6 +14,21 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver {
 
     NotificationManager mNotificationManager;
     int notification_id = 0;
+    public static onDataUpdatedListener onDataUpdatedListener = null;
+
+    public interface onDataUpdatedListener {
+        // public abstract void onImageUpload(long reportID, long imageID,
+        // String filename);
+
+        public abstract void refreshData();
+
+    }
+
+    public static void setOnDataUpdatedListener(onDataUpdatedListener listener) {
+        System.out.println("Initialized Onstatusupdatelistener");
+        onDataUpdatedListener = listener;
+
+    }
 
     @Override
     protected Notification getNotification(Context context, Intent intent) {

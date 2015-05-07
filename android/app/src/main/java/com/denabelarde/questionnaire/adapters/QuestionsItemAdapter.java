@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.denabelarde.questionnaire.R;
+import com.denabelarde.questionnaire.models.QuestionDto;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -16,31 +18,29 @@ import java.util.HashMap;
  */
 public class QuestionsItemAdapter extends BaseAdapter {
 
-    ArrayList<String> data;
+    ArrayList<QuestionDto> questionArray;
     LayoutInflater inflater;
     Context context;
-    HashMap<String,String> selectedBarcode;
 
-    public void refreshAdapter(ArrayList<String> data) {
-        this.data = data;
+    public void refreshAdapter(ArrayList<QuestionDto> questionArray) {
+        this.questionArray = questionArray;
         this.notifyDataSetChanged();
     }
 
-    public QuestionsItemAdapter(Context context, ArrayList<String> data, HashMap<String, String> selectedBarcode) {
+    public QuestionsItemAdapter(Context context, ArrayList<QuestionDto> questionArray) {
         this.context = context;
-        this.data = data;
-        this.selectedBarcode = selectedBarcode;
+        this.questionArray = questionArray;
         inflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return data.size();
+        return questionArray.size();
     }
 
     @Override
-    public String getItem(int i) {
-        return data.get(i);
+    public QuestionDto getItem(int i) {
+        return questionArray.get(i);
     }
 
     @Override
@@ -51,23 +51,26 @@ public class QuestionsItemAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         final ViewHolder holder;
-//        if (view == null) {
-//            view = inflater.inflate(R.layout.item_list_layout, viewGroup, false);
-//            holder = new ViewHolder((TextView) view.findViewById(R.id.item_number), (TextView) view.findViewById(R.id.mps));
-//            view.setTag(holder);
-//        } else {
-//            holder = (ViewHolder) view.getTag();
-//        }
+        if (view == null) {
+            view = inflater.inflate(R.layout.questions_item_layout, viewGroup, false);
+            holder = new ViewHolder((TextView) view.findViewById(R.id.question_title), (TextView) view.findViewById(R.id.question_desc));
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+        QuestionDto questionDto = questionArray.get(position);
+        holder.questionTitle.setText(questionDto.getTitle());
+        holder.questionDescription.setText(questionDto.getDescription());
 
         return view;
     }
 
     public class ViewHolder {
-        TextView item_number, mps;
+        TextView questionTitle, questionDescription;
 
-        public ViewHolder(TextView item_number, TextView mps) {
-            this.item_number = item_number;
-            this.mps = mps;
+        public ViewHolder(TextView questionTitle, TextView questionDescription) {
+            this.questionTitle = questionTitle;
+            this.questionDescription = questionDescription;
         }
     }
 }
