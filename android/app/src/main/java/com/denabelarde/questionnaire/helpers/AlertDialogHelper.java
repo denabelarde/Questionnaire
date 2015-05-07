@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 
-import com.google.android.maps.mytracks.R;
+import com.denabelarde.questionnaire.R;
 
 
 public class AlertDialogHelper {
@@ -29,28 +29,28 @@ public class AlertDialogHelper {
 		adb.show();
 	}
 
-	public String getServerResponse(Context context, String message) {
-		String result = "";
-		if (message.contains("401")) {
-			result = context.getResources().getString(
-					R.string.server_response_401);
-		} else if (message.contains("404")) {
-			result = context.getResources().getString(
-					R.string.server_response_404);
-		} else if (message.contains("500")) {
-			result = context.getResources().getString(
-					R.string.server_response_500);
-		} else if (message.contains("204")) {
-			result = context.getResources().getString(
-					R.string.server_response_204);
-		} else if (message.contains("301")) {
-			result = context.getResources().getString(
-					R.string.server_response_301);
-		} else {
-			result = "Unknown Error Occured!";
-		}
-		return result;
-	}
+//	public String getServerResponse(Context context, String message) {
+//		String result = "";
+//		if (message.contains("401")) {
+//			result = context.getResources().getString(
+//					R.string.server_response_401);
+//		} else if (message.contains("404")) {
+//			result = context.getResources().getString(
+//					R.string.server_response_404);
+//		} else if (message.contains("500")) {
+//			result = context.getResources().getString(
+//					R.string.server_response_500);
+//		} else if (message.contains("204")) {
+//			result = context.getResources().getString(
+//					R.string.server_response_204);
+//		} else if (message.contains("301")) {
+//			result = context.getResources().getString(
+//					R.string.server_response_301);
+//		} else {
+//			result = "Unknown Error Occured!";
+//		}
+//		return result;
+//	}
 
 	public void alertNoticeMessage(String title, String message, Context context) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(context);

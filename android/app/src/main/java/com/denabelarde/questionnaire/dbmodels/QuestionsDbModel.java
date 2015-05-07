@@ -41,6 +41,27 @@ public class QuestionsDbModel {
 
     }
 
+    public static boolean checkIfExisting(Context context, String objectId) {
+        DatabaseHelper dbhelper = new DatabaseHelper(context);
+        String[] columns = {"count(" + _ID_TAG + ")"};
+        int reportcount = 0;
+        boolean result=false;
+        Cursor report = dbhelper.query(TABLE_TAG, columns, OBJECT_ID_TAG + "=?", new String[]{objectId}, null,
+                null, null);
+
+        if (report.moveToFirst()) {
+            reportcount = report.getInt(0);
+        }
+
+        if(reportcount>0){
+            result=true;
+        }
+        report.close();
+        dbhelper.close();
+
+        return result;
+
+    }
 
     public static void batchInsertQuestions(Context context,
                                             ArrayList<String[]> values) {

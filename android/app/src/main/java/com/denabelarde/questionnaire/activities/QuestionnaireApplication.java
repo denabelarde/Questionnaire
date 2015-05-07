@@ -2,8 +2,10 @@ package com.denabelarde.questionnaire.activities;
 
 import android.app.Application;
 
+import com.denabelarde.questionnaire.Services.ServiceManager;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
+import com.parse.ParsePush;
 
 /**
  * Created by ddabelarde on 5/6/15.

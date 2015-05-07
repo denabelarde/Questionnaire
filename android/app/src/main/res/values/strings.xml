@@ -9,5 +9,5 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_splash">MainActivity</string>
     <string name="title_activity_main_activity2">MainActivity2</string>
-
+    <string name="button_ok">OK</string>
 </resources>

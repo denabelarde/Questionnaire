@@ -49,7 +49,7 @@ public class UserDbModel {
     public static UserDto getCurrentUser(Context context) {
         DatabaseHelper dbhelper = new DatabaseHelper(context);
         int status = 1;
-        Cursor user = dbhelper.query(TABLE_TAG, null, null, new String[]{String.valueOf(status)}, null, null,
+        Cursor user = dbhelper.query(TABLE_TAG, null, null,null, null, null,
                 null);
 
         UserDto userDto = null;

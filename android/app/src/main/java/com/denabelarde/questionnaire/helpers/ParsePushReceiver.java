@@ -5,6 +5,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 
+import com.denabelarde.questionnaire.Services.ParsePushDto;
+import com.denabelarde.questionnaire.Services.ServiceManager;
+import com.google.gson.Gson;
 import com.parse.ParsePushBroadcastReceiver;
 
 /**
@@ -44,8 +47,19 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         mNotificationManager = (NotificationManager) context.getApplicationContext().
                 getSystemService(Context.NOTIFICATION_SERVICE);
-
         System.out.println(intent.getStringExtra(ParsePushBroadcastReceiver.KEY_PUSH_DATA) + " <<<<PUSH NOTIFICATION");
+        Gson gson = new Gson();
+        ParsePushDto parsePushDto = gson.fromJson(intent.getStringExtra(ParsePushBroadcastReceiver.KEY_PUSH_DATA), ParsePushDto.class);
+        try {
+            if (parsePushDto.getAlert().split("~")[0].equalsIgnoreCase("question")) {
+                ServiceManager.fetchAllQuestionsFromParse(context);
+            } else {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         super.onReceive(context, intent);
     }
 }

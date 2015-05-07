@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.denabelarde.questionnaire.R;
+import com.denabelarde.questionnaire.Services.ParsePushDto;
 import com.denabelarde.questionnaire.Services.ServiceManager;
 import com.denabelarde.questionnaire.adapters.QuestionsItemAdapter;
 import com.denabelarde.questionnaire.dbmodels.QuestionsDbModel;
@@ -50,7 +51,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-
+        ParsePush.subscribeInBackground(ServiceManager.genericChannel,new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e==null){
+                    System.out.println("successfully subscribed in generic channel");
+                }
+            }
+        });
         questionsArray = new ArrayList<QuestionDto>();
         questionsItemAdapter = new QuestionsItemAdapter(this, questionsArray);
         questionsLv.setAdapter(questionsItemAdapter);
@@ -65,6 +73,8 @@ public class MainActivity extends ActionBarActivity {
                     "Notification",
                     "Fetching questions, please wait ...");
             ServiceManager.fetchAllQuestionsFromParse(this);
+        }else{
+            refreshListView();
         }
 
         askQuestionBtn.setOnClickListener(new View.OnClickListener() {
@@ -87,15 +97,15 @@ public class MainActivity extends ActionBarActivity {
                         questionObject.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-
                                 if (e == null) {
                                     ParsePush push = new ParsePush();
                                     push.setChannel(ServiceManager.genericChannel);
-                                    push.setMessage(questionObject.getObjectId());
+                                    push.setMessage("question~new");
                                     push.sendInBackground(new SendCallback() {
                                         @Override
                                         public void done(ParseException e) {
                                             if (e == null) {
+                                                System.out.println("question push sent");
                                             }
                                         }
                                     });
@@ -179,7 +189,9 @@ public class MainActivity extends ActionBarActivity {
             ServiceManager.setOnDataUpdatedListener(new ServiceManager.onDataUpdatedListener() {
                 @Override
                 public void returnResult(int resultCode) {
-                    progressDialog.dismiss();
+                  if(progressDialog!=null){
+                      progressDialog.dismiss();
+                  }
                     if (resultCode == 200) {
                         refreshListView();
                         prefs.edit().putBoolean("firstrun", false).apply();

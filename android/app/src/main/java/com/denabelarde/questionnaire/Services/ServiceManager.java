@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ServiceManager {
 
-    public static String genericChannel = "com.denabelarde.questionnaire";
+    public static String genericChannel = "comdenabelardequestionnaire";
     public static onDataUpdatedListener onDataUpdatedListener = null;
 
     public interface onDataUpdatedListener {
@@ -41,17 +41,19 @@ public class ServiceManager {
 
                     ArrayList<String[]> batchArray = new ArrayList<String[]>();
                     for (ParseObject parseObject : objects) {
-                        System.out.println(parseObject.getObjectId() + " <<< getObjectId");
-                        System.out.println(parseObject.getString("title") + " <<< Question title");
-                        System.out.println(parseObject.getDate("updatedAt") + " <<< updatedAt");
-                        System.out.println(parseObject.getDate("createdAt") + " <<< createdAt");
-                        System.out.println(parseObject.getString("description") + " <<< description");
-                        System.out.println(parseObject.getString("ownerId") + " <<< ownerId");
-                        System.out.println(parseObject.getString("ownerUserName") + " <<< ownerUserName");
-                        System.out.println(parseObject.getString("answersCount") + " <<< answersCount");
-                        String[] qArray = {parseObject.getObjectId(), parseObject.getString("ownerId"), parseObject.getString("ownerUserName"), parseObject.getString("title"), parseObject.getString("description"), parseObject.getDate("createdAt") + "", parseObject.getDate("updatedAt") + "", String.valueOf(parseObject.getInt("answersCount")) + ""};
+                        if(!QuestionsDbModel.checkIfExisting(context,parseObject.getObjectId())){
+                            System.out.println(parseObject.getObjectId() + " <<< getObjectId");
+                            System.out.println(parseObject.getString("title") + " <<< Question title");
+                            System.out.println(parseObject.getDate("updatedAt") + " <<< updatedAt");
+                            System.out.println(parseObject.getDate("createdAt") + " <<< createdAt");
+                            System.out.println(parseObject.getString("description") + " <<< description");
+                            System.out.println(parseObject.getString("ownerId") + " <<< ownerId");
+                            System.out.println(parseObject.getString("ownerUserName") + " <<< ownerUserName");
+                            System.out.println(parseObject.getString("answersCount") + " <<< answersCount");
+                            String[] qArray = {parseObject.getObjectId(), parseObject.getString("ownerId"), parseObject.getString("ownerUserName"), parseObject.getString("title"), parseObject.getString("description"), parseObject.getDate("createdAt") + "", parseObject.getDate("updatedAt") + "", String.valueOf(parseObject.getInt("answersCount")) + ""};
 
-                        batchArray.add(qArray);
+                            batchArray.add(qArray);
+                        }
                     }
                     QuestionsDbModel.batchInsertQuestions(context, batchArray);
                     if (onDataUpdatedListener != null) {
