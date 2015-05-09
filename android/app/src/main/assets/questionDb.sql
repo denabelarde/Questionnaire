@@ -28,5 +28,6 @@ CREATE TABLE IF NOT EXISTS `answers` (
 	`object_id` text NOT NULL,
 	`answer_string` text NOT NULL,
 	`user_id` text NOT NULL,
-	`question_id` text NOT NULL
+	`question_id` text NOT NULL,
+	`username` text NOT NULL
 );

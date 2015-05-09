@@ -1,9 +1,11 @@
 package com.denabelarde.questionnaire.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ddabelarde on 5/6/15.
  */
-public class QuestionDto {
+public class QuestionDto implements Serializable {
 
     private long _id;
     private String objectId;

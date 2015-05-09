@@ -12,6 +12,6 @@
         android:padding="50dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_action_cloud" />
+        android:src="@drawable/splash_image" />
 
 </RelativeLayout>

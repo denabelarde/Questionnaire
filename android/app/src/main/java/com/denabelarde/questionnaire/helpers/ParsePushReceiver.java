@@ -54,7 +54,7 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver {
             if (parsePushDto.getAlert().split("~")[0].equalsIgnoreCase("question")) {
                 ServiceManager.fetchAllQuestionsFromParse(context);
             } else {
-
+                ServiceManager.fetchAnswersForQuestion(context, parsePushDto.getAlert().split("~")[1]);
             }
         } catch (Exception e) {
             e.printStackTrace();

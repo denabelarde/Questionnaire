@@ -43,7 +43,7 @@ public class QuestionsDbModel {
 
     public static boolean checkIfExisting(Context context, String objectId) {
         DatabaseHelper dbhelper = new DatabaseHelper(context);
-        String[] columns = {"count(" + _ID_TAG + ")"};
+        String[] columns = {"count(" + OBJECT_ID_TAG + ")"};
         int reportcount = 0;
         boolean result=false;
         Cursor report = dbhelper.query(TABLE_TAG, columns, OBJECT_ID_TAG + "=?", new String[]{objectId}, null,

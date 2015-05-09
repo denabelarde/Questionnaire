@@ -5,6 +5,7 @@
     <color name="air21_theme_overlay">#310f4d</color>
     <color name="air21_text">#491f6b</color>
     <color name="White">#ffffff</color>
+    <color name="DarkWhite">#ffa3a3a3</color>
     <color name="login_button_color">#91b1ba</color>
     <color name="login_button_overlay">#CC91b1ba</color>
     <color name="login_button_text">#1f0e2e</color>

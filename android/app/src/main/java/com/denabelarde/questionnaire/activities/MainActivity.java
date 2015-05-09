@@ -2,12 +2,14 @@ package com.denabelarde.questionnaire.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import com.denabelarde.questionnaire.Services.ServiceManager;
 import com.denabelarde.questionnaire.adapters.QuestionsItemAdapter;
 import com.denabelarde.questionnaire.dbmodels.QuestionsDbModel;
 import com.denabelarde.questionnaire.dbmodels.UserDbModel;
+import com.denabelarde.questionnaire.helpers.AlertDialogHelper;
 import com.denabelarde.questionnaire.helpers.AskQuestionDialogFrag;
 import com.denabelarde.questionnaire.helpers.ParsePushReceiver;
 import com.denabelarde.questionnaire.helpers.QuestionDialogListener;
@@ -51,10 +54,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        ParsePush.subscribeInBackground(ServiceManager.genericChannel,new SaveCallback() {
+        ParsePush.subscribeInBackground(ServiceManager.genericChannel, new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e==null){
+                if (e == null) {
                     System.out.println("successfully subscribed in generic channel");
                 }
             }
@@ -73,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
                     "Notification",
                     "Fetching questions, please wait ...");
             ServiceManager.fetchAllQuestionsFromParse(this);
-        }else{
+        } else {
             refreshListView();
         }
 
@@ -85,48 +88,50 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public void onSubmitClick(String title, String description) {
-                        progressDialog = ProgressDialog.show(MainActivity.this,
-                                "Notification",
-                                "Sending Question, please wait ...");
-                        progressDialog.setCancelable(false);
-                        final ParseObject questionObject = new ParseObject("Questions");
-                        questionObject.put("title", title);
-                        questionObject.put("description", description);
-                        questionObject.put("ownerId", userDto.getObjectID());
-                        questionObject.put("ownerUserName", userDto.getUserName());
-                        questionObject.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    ParsePush push = new ParsePush();
-                                    push.setChannel(ServiceManager.genericChannel);
-                                    push.setMessage("question~new");
-                                    push.sendInBackground(new SendCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            if (e == null) {
-                                                System.out.println("question push sent");
+                        if(ServiceManager.isNetworkAvailable(MainActivity.this)){
+                            progressDialog = ProgressDialog.show(MainActivity.this,
+                                    "Notification",
+                                    "Sending Question, please wait ...");
+                            progressDialog.setCancelable(false);
+                            final ParseObject questionObject = new ParseObject("Questions");
+                            questionObject.put("title", title);
+                            questionObject.put("description", description);
+                            questionObject.put("ownerId", userDto.getObjectID());
+                            questionObject.put("ownerUserName", userDto.getUserName());
+                            questionObject.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        ParsePush push = new ParsePush();
+                                        push.setChannel(ServiceManager.genericChannel);
+                                        push.setMessage("question~new");
+                                        push.sendInBackground(new SendCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                if (e == null) {
+                                                    System.out.println("question push sent");
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
 
-                                    ParsePush.subscribeInBackground(questionObject.getObjectId(), new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            if (e == null) {
-                                                System.out.println("Successfully subscribed in " + questionObject.getObjectId() + " channel!");
+                                        ParsePush.subscribeInBackground(questionObject.getObjectId(), new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                if (e == null) {
+                                                    System.out.println("Successfully subscribed in " + questionObject.getObjectId() + " channel!");
+                                                }
                                             }
-                                        }
-                                    });
-                                    progressDialog.dismiss();
-                                    questionDialogFragment.dismiss();
-                                } else {
-                                    Toast.makeText(MainActivity.this, "Sending failed.", Toast.LENGTH_SHORT).show();
+                                        });
+                                        progressDialog.dismiss();
+                                        questionDialogFragment.dismiss();
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "Sending failed.", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
-
-
+                            });
+                        }else{
+                            AlertDialogHelper.alertMessage("Error","No Internet Connection!",MainActivity.this);
+                        }
                     }
 
                     @Override
@@ -143,32 +148,14 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-//        if (prefs.getBoolean("firstrun", true)) {
-//            ParseQuery<ParseObject> query = ParseQuery.getQuery("Questions");
-//            progressDialog = ProgressDialog.show(MainActivity.this,
-//                    "Notification",
-//                    "Fetching questions, please wait ...");
-//            progressDialog.setCancelable(false);
-//            query.findInBackground(new FindCallback<ParseObject>() {
-//                public void done(List<ParseObject> objects, ParseException e) {
-//                    progressDialog.dismiss();
-//                    if (e == null) {
-//                        ArrayList<String[]> batchArray = new ArrayList<String[]>();
-//                        for (ParseObject parseObject : objects) {
-//                            String[] qArray = {parseObject.getObjectId(), parseObject.getString("ownerId"), parseObject.getString("ownerUserName"), parseObject.getString("title"), parseObject.getString("description"), parseObject.getString("createdAt"), parseObject.getString("updatedAt"), String.valueOf(parseObject.getInt("answersCount"))};
-//                            QuestionDto questionDto = new QuestionDto(parseObject.getObjectId(), parseObject.getString("ownerId"), parseObject.getString("ownerUserName"), parseObject.getString("title"), parseObject.getString("description"), parseObject.getString("createdAt"), parseObject.getString("updatedAt"), parseObject.getInt("answersCount"));
-//                            questionsArray.add(questionDto);
-//                            batchArray.add(qArray);
-//                        }
-//                        QuestionsDbModel.batchInsertQuestions(MainActivity.this, batchArray);
-//                        questionsItemAdapter.notifyDataSetChanged();
-//                    } else {
-//                        Toast.makeText(MainActivity.this, "Cannot load questions", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            });
-//
-//        }
+        questionsLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, QuestionActivity.class);
+                intent.putExtra("question", questionsArray.get(i));
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -189,9 +176,9 @@ public class MainActivity extends ActionBarActivity {
             ServiceManager.setOnDataUpdatedListener(new ServiceManager.onDataUpdatedListener() {
                 @Override
                 public void returnResult(int resultCode) {
-                  if(progressDialog!=null){
-                      progressDialog.dismiss();
-                  }
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
                     if (resultCode == 200) {
                         refreshListView();
                         prefs.edit().putBoolean("firstrun", false).apply();
@@ -202,9 +189,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void refreshListView() {
-        questionsArray.clear();
-        questionsArray.addAll(QuestionsDbModel.getAllQuestions(MainActivity.this));
-        questionsItemAdapter.notifyDataSetChanged();
+        try {
+            questionsArray.clear();
+            questionsArray.addAll(QuestionsDbModel.getAllQuestions(MainActivity.this));
+            questionsItemAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -225,8 +216,15 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+    }
+
+    @Override
+    protected void onPause() {
         ParsePushReceiver.onDataUpdatedListener = null;
         ServiceManager.onDataUpdatedListener = null;
+        super.onPause();
+
     }
 
     @Override
