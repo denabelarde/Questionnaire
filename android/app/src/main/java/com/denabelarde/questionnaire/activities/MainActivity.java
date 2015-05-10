@@ -1,5 +1,8 @@
 package com.denabelarde.questionnaire.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.support.v7.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -52,8 +55,11 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
         ParsePush.subscribeInBackground(ServiceManager.genericChannel, new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -88,49 +94,54 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public void onSubmitClick(String title, String description) {
-                        if(ServiceManager.isNetworkAvailable(MainActivity.this)){
-                            progressDialog = ProgressDialog.show(MainActivity.this,
-                                    "Notification",
-                                    "Sending Question, please wait ...");
-                            progressDialog.setCancelable(false);
-                            final ParseObject questionObject = new ParseObject("Questions");
-                            questionObject.put("title", title);
-                            questionObject.put("description", description);
-                            questionObject.put("ownerId", userDto.getObjectID());
-                            questionObject.put("ownerUserName", userDto.getUserName());
-                            questionObject.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        ParsePush push = new ParsePush();
-                                        push.setChannel(ServiceManager.genericChannel);
-                                        push.setMessage("question~new");
-                                        push.sendInBackground(new SendCallback() {
-                                            @Override
-                                            public void done(ParseException e) {
-                                                if (e == null) {
-                                                    System.out.println("question push sent");
+                        if (ServiceManager.isNetworkAvailable(MainActivity.this)) {
+                            if (!title.isEmpty() && !description.isEmpty()) {
+                                progressDialog = ProgressDialog.show(MainActivity.this,
+                                        "Notification",
+                                        "Sending Question, please wait ...");
+                                progressDialog.setCancelable(false);
+                                final ParseObject questionObject = new ParseObject("Questions");
+                                questionObject.put("title", title);
+                                questionObject.put("description", description);
+                                questionObject.put("ownerId", userDto.getObjectID());
+                                questionObject.put("ownerUserName", userDto.getUserName());
+                                questionObject.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            ParsePush push = new ParsePush();
+                                            push.setChannel(ServiceManager.genericChannel);
+                                            push.setMessage("question~new");
+                                            push.sendInBackground(new SendCallback() {
+                                                @Override
+                                                public void done(ParseException e) {
+                                                    if (e == null) {
+                                                        System.out.println("question push sent");
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
 
-                                        ParsePush.subscribeInBackground(questionObject.getObjectId(), new SaveCallback() {
-                                            @Override
-                                            public void done(ParseException e) {
-                                                if (e == null) {
-                                                    System.out.println("Successfully subscribed in " + questionObject.getObjectId() + " channel!");
+                                            ParsePush.subscribeInBackground(questionObject.getObjectId(), new SaveCallback() {
+                                                @Override
+                                                public void done(ParseException e) {
+                                                    if (e == null) {
+                                                        System.out.println("Successfully subscribed in " + questionObject.getObjectId() + " channel!");
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+
+                                            questionDialogFragment.dismiss();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Sending failed.", Toast.LENGTH_SHORT).show();
+                                        }
                                         progressDialog.dismiss();
-                                        questionDialogFragment.dismiss();
-                                    } else {
-                                        Toast.makeText(MainActivity.this, "Sending failed.", Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                            });
-                        }else{
-                            AlertDialogHelper.alertMessage("Error","No Internet Connection!",MainActivity.this);
+                                });
+                            } else {
+                                AlertDialogHelper.alertMessage("Error", "Fill all required fields!", MainActivity.this);
+                            }
+                        } else {
+                            AlertDialogHelper.alertMessage("Error", "No Internet Connection!", MainActivity.this);
                         }
                     }
 
@@ -231,14 +242,41 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specif
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        if (id == R.id.logout_settings) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+            adb.setTitle("Warning");
+            adb.setIcon(R.drawable.warning);
+            adb.setMessage(getResources().getString(R.string.logout_confirmation));
+            adb.setNegativeButton("NO",
+                    new AlertDialog.OnClickListener() {
 
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            // TODO Auto-generated method stub
+
+                        }
+                    });
+            adb.setPositiveButton("YES",
+                    new AlertDialog.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            // isCheckedTODO Auto-generated method stub
+                            UserDbModel.deleteAllUsers(MainActivity.this);
+                            finish();
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+            adb.setCancelable(false);
+            adb.show();
+        } else {
+            onBackPressed();
+        }
         return super.onOptionsItemSelected(item);
     }
 }

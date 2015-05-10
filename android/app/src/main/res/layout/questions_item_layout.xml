@@ -8,9 +8,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/lightBlue"
+            android:background="@drawable/question_item_selector"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:layout_marginBottom="1dp">
 
             <TextView
                 android:id="@+id/question_title"

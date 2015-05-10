@@ -14,9 +14,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
 import com.denabelarde.questionnaire.R;
 import com.denabelarde.questionnaire.Services.ServiceManager;
 import com.denabelarde.questionnaire.dbmodels.UserDbModel;
@@ -44,6 +46,8 @@ public class LoginActivity extends Activity {
     ProgressDialog progressDialog;
     @InjectView(R.id.toplayout)
     RelativeLayout topLayout;
+    @InjectView(R.id.register_button)
+    TextView registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ServiceManager.isNetworkAvailable(LoginActivity.this)){
+                if (ServiceManager.isNetworkAvailable(LoginActivity.this)) {
                     String username = userNameField.getText().toString();
                     String password = passwordField.getText().toString();
                     progressDialog = ProgressDialog.show(LoginActivity.this,
@@ -98,6 +102,13 @@ public class LoginActivity extends Activity {
             }
         });
 
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+            }
+        });
         Keyboard();
     }
 

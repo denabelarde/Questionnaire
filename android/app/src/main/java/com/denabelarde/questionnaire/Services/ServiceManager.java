@@ -47,7 +47,6 @@ public class ServiceManager {
                             System.out.println(parseObject.getString("ownerUserName") + " <<< ownerUserName");
                             System.out.println(parseObject.getString("answersCount") + " <<< answersCount");
                             String[] qArray = {parseObject.getObjectId(), parseObject.getString("ownerId"), parseObject.getString("ownerUserName"), parseObject.getString("title"), parseObject.getString("description"), parseObject.getDate("createdAt") + "", parseObject.getDate("updatedAt") + "", String.valueOf(parseObject.getInt("answersCount")) + ""};
-
                             batchArray.add(qArray);
                         }
                     }

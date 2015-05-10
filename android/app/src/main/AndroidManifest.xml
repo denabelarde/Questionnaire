@@ -73,7 +73,11 @@
         <activity
             android:name=".activities.QuestionActivity"
             android:label="@string/title_activity_question"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name=".activities.RegistrationActivity"
+            android:label="@string/title_activity_registration" >
         </activity>
     </application>
 

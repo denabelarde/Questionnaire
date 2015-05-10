@@ -1,5 +1,6 @@
 package com.denabelarde.questionnaire.activities;
 
+import android.support.v7.app.ActionBar;
 import android.app.ProgressDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import com.denabelarde.questionnaire.R;
 import com.denabelarde.questionnaire.Services.ServiceManager;
 import com.denabelarde.questionnaire.adapters.AnswersItemAdapter;
 import com.denabelarde.questionnaire.dbmodels.AnswersDbModel;
-import com.denabelarde.questionnaire.dbmodels.QuestionsDbModel;
 import com.denabelarde.questionnaire.dbmodels.UserDbModel;
 import com.denabelarde.questionnaire.helpers.AlertDialogHelper;
 import com.denabelarde.questionnaire.helpers.KeyBoardHandler;
@@ -55,7 +55,10 @@ public class QuestionActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_question);
+        ButterKnife.inject(this);
         ButterKnife.inject(this);
         questionDto = (QuestionDto) getIntent().getExtras().getSerializable("question");
 
@@ -168,7 +171,7 @@ public class QuestionActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_question, menu);
+
         return true;
     }
 
@@ -177,12 +180,7 @@ public class QuestionActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        onBackPressed();
 
         return super.onOptionsItemSelected(item);
     }
